@@ -98,7 +98,7 @@
                   {% if post.image_url %}
                     <img class="img-fluid" src="{{ post.image_url }}" alt="">
                   {% else %}
-                    <img class="img-fluid" src="{% static 'img/banner/forest.png' %}">
+                    <img class="img-fluid" src="{% static 'img/not_banner/forest.png' %}">
                   {% endif %}
                   <ul class="thumb-info">
                     <li><a href="{% url 'post_detail' post.slug %}"><i class="ti-user"></i>{{post.author}}</a></li>
