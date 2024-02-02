@@ -52,8 +52,12 @@ def index(request):
     #     post.comments_count = count_for_id[post.id]
     most_popular_posts = Post.objects.popular() \
         .prefetch_related('author')[:5] \
+        .prefetch_related('tags') \
         .fetch_with_comments_count()
-    fresh_posts = Post.objects.annotate(comments_count=Count('comments', distinct=True)).prefetch_related('author').order_by('published_at')
+    fresh_posts = (Post.objects.annotate(comments_count=Count('comments', distinct=True))
+        .prefetch_related('author')
+        .prefetch_related('tags')
+        .order_by('published_at'))
     most_fresh_posts = list(fresh_posts)[-5:]
     most_popular_tags = Tag.objects.popular()[:5]
     context = {
@@ -96,7 +100,7 @@ def post_detail(request, slug):
     most_popular_tags = Tag.objects.popular()[:5]
 
     most_popular_posts = Post.objects.popular() \
-        .prefetch_related('author')[:5] \
+                             .prefetch_related('author')[:5] \
         .fetch_with_comments_count()
 
     context = {
@@ -115,7 +119,7 @@ def tag_filter(request, tag_title):
     most_popular_tags = Tag.objects.popular()[:5]
 
     most_popular_posts = Post.objects.popular() \
-        .prefetch_related('author')[:5] \
+                             .prefetch_related('author')[:5] \
         .fetch_with_comments_count()
 
     related_posts = tag.posts.all()[:20]
@@ -135,4 +139,3 @@ def contacts(request):
     # позже здесь будет код для статистики заходов на эту страницу
     # и для записи фидбека
     return render(request, 'contacts.html', {})
-
